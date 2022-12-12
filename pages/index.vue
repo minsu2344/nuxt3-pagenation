@@ -12,7 +12,7 @@
         <p>작성 시간</p>
         <p>좋아요</p>
       </div>
-      <div class="contents-main" v-for="data in contentsData" :key="data.id">
+      <div class="contents-main" v-for="data in computedShowData" :key="data.id">
         <p>{{data.id}}</p>
         <nuxt-link :to="`/contents/${data.id}`">{{data.title}}</nuxt-link>
         <p>{{data.author}}</p>
@@ -21,7 +21,7 @@
       </div>
     </div>
     <div>
-      <select class="contents-num" v-model="limit">
+      <select class="contents-num" v-model="limit" @change="() => curPage = 1">
         <option value="5">5개씩 보기</option>
         <option value="10">10개씩 보기</option>
         <option value="15">15개씩 보기</option>
@@ -29,11 +29,12 @@
       </select>
     </div>
     <div class="page-container">
-      <div class="prev-btn pagenation">◀</div>
-      <div class="page-num pagenation" :class="{active: number === curPage}" v-for="number in computedCurShowPage" :key="number">
+      <div class="prev-btn pagenation" @click="handlePrevBtn">◀</div>
+      <div class="page-num pagenation" :class="{active: number === curPage}" v-for="number in computedCurShowPage" :key="number" @click="() => curPage = number">
         {{number}}
       </div>
-      <div class="next-btn pagenation">▶</div>
+      <div class="pagenation" v-if="maxPage > 5" @click="curPage = maxPage">...{{maxPage}}</div>
+      <div class="next-btn pagenation" @click="handleNextBtn">▶</div>
     </div>
   </div>
 </template>
@@ -41,13 +42,43 @@
 <script setup lang="ts">
 import {contentsData} from '@/data/data'
 
-const limit = ref<number>(5);
-const maxPage = ref<number>(Math.ceil(contentsData.length / limit.value));
-const curPage = ref<number>(1);
-const curShowPage = ref<number>(1);
+const limit = ref<number>(5); // 보여질 컨텐츠 개수
+const curPage = ref<number>(1); //  현재 페이지
+const curShowPage = ref<number>(0); // 현재 보여질 페이지 index
+const maxPage = ref<number>(Math.ceil(contentsData.length / limit.value)); // 최대 페이지
 
-const computedCurShowPage = computed(() => curShowPage.value * limit.value);
-const computedShowData = computed(() => contentsData.splice)
+// 현재 보여질 페이지 리스트
+const computedCurShowPage = computed(() => {
+  const pageArr = []
+  for(let i = curShowPage.value * limit.value + 1; i < (curShowPage.value+1) * limit.value + 1; i++) {
+    if(i > maxPage.value) break;
+    pageArr.push(i);
+  }
+  return pageArr;
+})
+
+console.log(computedCurShowPage.value);
+// 현재 보여질 데이터
+const computedShowData = computed(() => contentsData.slice(limit.value*(curPage.value-1), limit.value*(curPage.value)));
+
+// 현재 페이지 바뀔 시 curShowPage 업데이트
+watch(() => curPage.value, () => {
+  curShowPage.value = Math.floor(curPage.value / limit.value);
+})
+// limit 바뀔 시 
+watch(() => limit.value, () => maxPage.value = Math.ceil(contentsData.length / limit.value));
+
+// prev 버튼 눌렀을 때
+function handlePrevBtn() {
+  if(curPage.value === 1) return;
+  curPage.value--;
+}
+
+// next 버튼 눌렀을 때
+function handleNextBtn() {
+  if(curPage.value === maxPage.value) return;
+  curPage.value++;
+}
 </script>
 
 <style scoped lang="scss">
