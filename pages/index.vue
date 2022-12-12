@@ -22,6 +22,7 @@
     </div>
     <div>
       <select class="contents-num" v-model="limit" @change="() => curPage = 1">
+        <option value="3">3개씩 보기</option>
         <option value="5">5개씩 보기</option>
         <option value="10">10개씩 보기</option>
         <option value="15">15개씩 보기</option>
@@ -33,7 +34,7 @@
       <div class="page-num pagenation" :class="{active: number === curPage}" v-for="number in computedCurShowPage" :key="number" @click="() => curPage = number">
         {{number}}
       </div>
-      <div class="pagenation" v-if="maxPage > 5" @click="curPage = maxPage">...{{maxPage}}</div>
+      <div class="pagenation" v-if="maxPage > pageCount*(curShowPage+1)" @click="curPage = maxPage">...{{maxPage}}</div>
       <div class="next-btn pagenation" @click="handleNextBtn">▶</div>
     </div>
   </div>
@@ -42,31 +43,31 @@
 <script setup lang="ts">
 import {contentsData} from '@/data/data'
 
-const limit = ref<number>(5); // 보여질 컨텐츠 개수
+const limit = ref<number>(3); // 보여질 컨텐츠 개수
 const curPage = ref<number>(1); //  현재 페이지
 const curShowPage = ref<number>(0); // 현재 보여질 페이지 index
 const maxPage = ref<number>(Math.ceil(contentsData.length / limit.value)); // 최대 페이지
+const pageCount: number = 5; // 보여질 페이지 개수
 
 // 현재 보여질 페이지 리스트
 const computedCurShowPage = computed(() => {
   const pageArr = []
-  for(let i = curShowPage.value * limit.value + 1; i < (curShowPage.value+1) * limit.value + 1; i++) {
+  for(let i = curShowPage.value * pageCount + 1; i < (curShowPage.value+1) * pageCount + 1; i++) {
     if(i > maxPage.value) break;
     pageArr.push(i);
   }
   return pageArr;
 })
 
-console.log(computedCurShowPage.value);
 // 현재 보여질 데이터
 const computedShowData = computed(() => contentsData.slice(limit.value*(curPage.value-1), limit.value*(curPage.value)));
 
 // 현재 페이지 바뀔 시 curShowPage 업데이트
 watch(() => curPage.value, () => {
-  curShowPage.value = Math.floor(curPage.value / limit.value);
+  curShowPage.value = curPage.value%pageCount === 0 ? curPage.value/pageCount - 1 : Math.floor(curPage.value / pageCount);
 })
 // limit 바뀔 시 
-watch(() => limit.value, () => maxPage.value = Math.ceil(contentsData.length / limit.value));
+watch(() => limit.value, () => maxPage.value = Math.ceil(contentsData.length / pageCount));
 
 // prev 버튼 눌렀을 때
 function handlePrevBtn() {
