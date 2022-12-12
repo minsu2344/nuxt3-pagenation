@@ -44,9 +44,10 @@
 import {contentsData} from '@/data/data'
 
 const router = useRouter();
+const route = useRoute();
 
-const limit = ref<number>(3); // 보여질 컨텐츠 개수
-const curPage = ref<number>(1); //  현재 페이지
+const limit = ref<number>(parseInt(route.query.limit as string) || 3); // 보여질 컨텐츠 개수
+const curPage = ref<number>(parseInt(route.query.page as string) || 1); //  현재 페이지
 const curShowPage = ref<number>(0); // 현재 보여질 페이지 index
 const maxPage = ref<number>(Math.ceil(contentsData.length / limit.value)); // 최대 페이지
 const pageCount: number = 5; // 보여질 페이지 개수
@@ -66,14 +67,36 @@ const computedShowData = computed(() => contentsData.slice(limit.value*(curPage.
 
 // 현재 페이지 바뀔 시 curShowPage 업데이트
 watch(() => curPage.value, () => {
+  if(isNaN(curPage.value)) {
+    curPage.value = 1;
+    return;
+  }
   curShowPage.value = curPage.value%pageCount === 0 ? curPage.value/pageCount - 1 : Math.floor(curPage.value / pageCount);
+  router.push({path: '/', query: {page: curPage.value, limit: limit.value}});
 })
 // limit 바뀔 시 
-watch(() => limit.value, () => maxPage.value = Math.ceil(contentsData.length / pageCount));
+watch(() => limit.value, () => {
+  if(isNaN(limit.value)) {
+    limit.value = 3
+    return;
+  }
+  maxPage.value = Math.ceil(contentsData.length / limit.value);
+  router.push({path: '/', query: {page: curPage.value, limit: limit.value}});
+});
+
+// 쿼리 바뀔 때마다 값 변경
+watch(() => route.query, () => {
+  curPage.value = parseInt(route.query.page as string);
+  limit.value = parseInt(route.query.limit as string);
+})
+
+onMounted(() => {
+  router.push({path: '/', query:{page: curPage.value, limit: limit.value}});
+})
 
 // prev 버튼 눌렀을 때
 function handlePrevBtn() {
-  curPage.value = pageCount * curShowPage.value
+  curPage.value = pageCount * curShowPage.value;
 }
 
 // next 버튼 눌렀을 때
