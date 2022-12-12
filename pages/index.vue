@@ -30,18 +30,20 @@
       </select>
     </div>
     <div class="page-container">
-      <div class="prev-btn pagenation" @click="handlePrevBtn">◀</div>
+      <div class="prev-btn pagenation" @click="handlePrevBtn" v-if="curShowPage !== 0">◀</div>
       <div class="page-num pagenation" :class="{active: number === curPage}" v-for="number in computedCurShowPage" :key="number" @click="() => curPage = number">
         {{number}}
       </div>
       <div class="pagenation" v-if="maxPage > pageCount*(curShowPage+1)" @click="curPage = maxPage">...{{maxPage}}</div>
-      <div class="next-btn pagenation" @click="handleNextBtn">▶</div>
+      <div class="next-btn pagenation" @click="handleNextBtn" v-if="curShowPage !== Math.floor(maxPage/pageCount)">▶</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import {contentsData} from '@/data/data'
+
+const router = useRouter();
 
 const limit = ref<number>(3); // 보여질 컨텐츠 개수
 const curPage = ref<number>(1); //  현재 페이지
@@ -71,14 +73,12 @@ watch(() => limit.value, () => maxPage.value = Math.ceil(contentsData.length / p
 
 // prev 버튼 눌렀을 때
 function handlePrevBtn() {
-  if(curPage.value === 1) return;
-  curPage.value--;
+  curPage.value = pageCount * curShowPage.value
 }
 
 // next 버튼 눌렀을 때
 function handleNextBtn() {
-  if(curPage.value === maxPage.value) return;
-  curPage.value++;
+  curPage.value = pageCount * (curShowPage.value+1) + 1;
 }
 </script>
 
