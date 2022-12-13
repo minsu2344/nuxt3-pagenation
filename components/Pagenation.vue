@@ -34,6 +34,7 @@ const maxPage = ref<number>(Math.ceil(contentsData.length / limit.value)); // �
 const pageCount: number = 5; // 보여질 페이지 개수
 
 onMounted(() => {
+  console.log('onMOunted')
   router.push({path: '/', query:{page: curPage.value, limit: limit.value}});
 })
 
@@ -68,6 +69,7 @@ watch(() => curPage.value, () => {
   }
   emitCurPage();
   curShowPage.value = curPage.value%pageCount === 0 ? curPage.value/pageCount - 1 : Math.floor(curPage.value / pageCount);
+  console.log('watch CurPage Value')
   router.push({path: '/', query: {page: curPage.value, limit: limit.value}});
 })
 // limit 바뀔 시 
@@ -78,11 +80,12 @@ watch(() => limit.value, () => {
   }
   emitLimit();
   maxPage.value = Math.ceil(contentsData.length / limit.value);
+  console.log('watch Limit Value')
   router.push({path: '/', query: {page: curPage.value, limit: limit.value}});
 });
 
 // 쿼리 바뀔 때마다 값 변경
-watch(() => route.query, () => {
+watch(() => route.query.toString(), () => {
   curPage.value = parseInt(route.query.page as string);
   limit.value = parseInt(route.query.limit as string);
 })
