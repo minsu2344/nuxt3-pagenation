@@ -5,7 +5,7 @@
         <h1>Board</h1>
       </div>
       <div class="navigation">
-        <nuxt-link to="/?page=1&limit=3">HOME</nuxt-link>
+        <nuxt-link to="/">HOME</nuxt-link>
         <nuxt-link to="/notion">NOTION</nuxt-link>
       </div>
     </div>

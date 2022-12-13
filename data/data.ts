@@ -1,4 +1,4 @@
-import { Data } from "~~/components/composable/data"
+import { Data } from "~~/composable/data"
 
 export const contentsData: Data[] = [
   {
@@ -201,4 +201,12 @@ export const contentsData: Data[] = [
     like: 2,
     description: '마마마지막처럼',
   },
+  {
+    id: 26,
+    title: '찐막',
+    author: '익명',
+    createdAt: '2022-12-12',
+    like: 10,
+    description: '아니 사실 다음 번이 찐막'
+  }
 ].reverse()
