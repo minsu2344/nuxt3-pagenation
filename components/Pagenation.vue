@@ -85,7 +85,8 @@ watch(() => limit.value, () => {
 });
 
 // 쿼리 바뀔 때마다 값 변경
-watch(() => route.query.toString(), () => {
+watch(() => route.query, () => {
+  console.log(route.query);
   curPage.value = parseInt(route.query.page as string);
   limit.value = parseInt(route.query.limit as string);
 })
