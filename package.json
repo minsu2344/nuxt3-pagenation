@@ -11,6 +11,13 @@
     "nuxt": "3.0.0"
   },
   "dependencies": {
+    "@tiptap/extension-character-count": "^2.0.0-beta.207",
+    "@tiptap/extension-subscript": "^2.0.0-beta.207",
+    "@tiptap/extension-superscript": "^2.0.0-beta.207",
+    "@tiptap/extension-text-align": "^2.0.0-beta.207",
+    "@tiptap/extension-underline": "^2.0.0-beta.207",
+    "@tiptap/starter-kit": "^2.0.0-beta.207",
+    "@tiptap/vue-3": "^2.0.0-beta.207",
     "sass": "^1.56.2",
     "sass-loader": "^13.2.0"
   }
