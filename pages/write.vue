@@ -6,17 +6,36 @@
     />
 
     <Tiptap v-model="content" :max-limit="280" />
-    
+    <input type="file" multiple @change="handleFileChange" />
     <button class="submit-button" @click="onSubmit">Submit</button>
   </div>
 </template>
 
 <script setup lang="ts">
+import axios from "axios";
 
-const content = ref<string>('');
+const router = useRouter();
 
-function onSubmit() {
-  alert(JSON.stringify(content.value))
+const content = ref<string>("");
+const file = ref([]);
+
+function handleFileChange(e: any): void {
+  file.value = e.target.files;
+}
+
+async function onSubmit() {
+  const formData = new FormData();
+  for (let i = 0; i < file.value.length; i++) {
+    formData.append("file", file.value[i]);
+  }
+  formData.append("content", content.value);
+  await axios.post("", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  alert("글 작성이 완료되었습니다.");
+  router.push({ path: "/" });
 }
 </script>
 
