@@ -6,7 +6,17 @@
     />
     <Tiptap v-model="content" :max-limit="280" />
     <div class="buttons">
-      <input type="file" multiple accept="image/*" @change="handleFileChange" />
+      <div>
+        <label for="upload">사진 선택</label>
+        <input
+          id="upload"
+          value=""
+          type="file"
+          multiple
+          accept="image/*"
+          @change="handleFileChange"
+        />
+      </div>
       <button class="submit-button" @click.prevent="onSubmit">Submit</button>
     </div>
     <div v-if="prevImage.length" class="preview-imgs">
@@ -30,14 +40,20 @@ const content = ref<string>("");
 const file = ref<File[]>([]);
 
 function handleFileChange(e: any): void {
+  if (!e.target.files.length) return;
+  for (let i = 0; i < e.target.files.length; i++) {
+    if (!e.target.files[i].type.includes("image")) {
+      alert("이미지 파일이 아닙니다. ★토스트★");
+      return;
+    }
+  }
   file.value = e.target.files;
 }
 
 const prevImage = computed(() => {
   const imgArr: string[] = [];
   for (let i = 0; i < file.value.length; i++) {
-    if (file.value[i].type.includes("image"))
-      imgArr.push(URL.createObjectURL(file.value[i]));
+    imgArr.push(URL.createObjectURL(file.value[i]));
   }
   return imgArr;
 });
@@ -87,7 +103,11 @@ async function onSubmit() {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  label {
+    cursor: pointer;
+  }
   input {
+    display: none;
   }
   margin-top: 0.5rem;
 }
@@ -95,5 +115,11 @@ async function onSubmit() {
 .prev-img {
   width: 8rem;
   height: 8rem;
+  padding: 0.25rem;
+  border: solid 2px gray;
+  border-radius: 0.5rem;
+  & + & {
+    margin-left: 0.5rem;
+  }
 }
 </style>
