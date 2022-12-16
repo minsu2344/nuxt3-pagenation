@@ -19,14 +19,11 @@
       </div>
       <button class="submit-button" @click.prevent="onSubmit">Submit</button>
     </div>
-    <div v-if="prevImage.length" class="preview-imgs">
-      <img
-        v-for="(src, i) in prevImage"
-        :key="i"
-        :src="src"
-        alt="prev img"
-        class="prev-img"
-      />
+    <div v-if="prevImage.length" class="prev-imgs-container">
+      <div v-for="(src, i) in prevImage" :key="i" class="prev-imgs">
+        <img :src="src" alt="prev img" class="prev-img" />
+        <p class="delete" @click="(e) => handleDeleteClick(e, i)">x</p>
+      </div>
     </div>
   </div>
 </template>
@@ -47,7 +44,8 @@ function handleFileChange(e: any): void {
       return;
     }
   }
-  file.value = e.target.files;
+  file.value.push(...e.target.files);
+  e.target.value = "";
 }
 
 const prevImage = computed(() => {
@@ -73,13 +71,16 @@ async function onSubmit() {
   alert("글 작성이 완료되었습니다.");
   router.push({ path: "/" });
 }
+
+function handleDeleteClick(e: any, i: number): void {
+  file.value.splice(i, 1);
+}
 </script>
 
 <style lang="scss" scoped>
 #app {
   font-family: Arial;
   font-size: 16px;
-  margin: 0 1rem;
 
   .submit-button {
     border: 1px solid #333;
@@ -118,8 +119,28 @@ async function onSubmit() {
   padding: 0.25rem;
   border: solid 2px gray;
   border-radius: 0.5rem;
+}
+
+.prev-imgs-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.prev-imgs {
+  position: relative;
+  color: red;
+  font-size: 1.25rem;
   & + & {
     margin-left: 0.5rem;
   }
+}
+
+.delete {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.25rem;
+  margin: 0;
+  cursor: pointer;
 }
 </style>
