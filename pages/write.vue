@@ -23,7 +23,6 @@
 
 <script setup lang="ts">
 import axios from "axios";
-import { FileData } from "@/store/file";
 
 const router = useRouter();
 
