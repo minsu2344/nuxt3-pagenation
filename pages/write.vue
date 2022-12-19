@@ -7,7 +7,7 @@
     <Tiptap v-model="content" :max-limit="280" />
     <div class="buttons">
       <div>
-        <label for="upload">사진 선택</label>
+        <label for="upload">이미지 추가</label>
         <input
           id="upload"
           value=""
@@ -17,7 +17,10 @@
           @change="handleFileChange"
         />
       </div>
-      <button class="submit-button" @click.prevent="onSubmit">Submit</button>
+      <div class="navigation-buttons">
+        <button class="cancel-button" @click="handleCancelWrite">취소</button>
+        <button class="submit-button" @click.prevent="onSubmit">작성 완료</button>
+      </div>
     </div>
     <div v-if="prevImage.length" class="prev-imgs-container">
       <div v-for="(src, i) in prevImage" :key="i" class="prev-imgs">
@@ -75,6 +78,11 @@ async function onSubmit() {
 function handleDeleteClick(e: any, i: number): void {
   file.value.splice(i, 1);
 }
+
+function handleCancelWrite() {
+  if (confirm("작성 중인 글은 저장되지 않습니다. 취소하시겠습니까?"))
+    router.push({ path: "/" });
+}
 </script>
 
 <style lang="scss" scoped>
@@ -92,6 +100,7 @@ function handleDeleteClick(e: any, i: number): void {
     margin-top: 8px;
     -webkit-appearance: none;
     cursor: pointer;
+    transition: all 0.2s linear;
 
     &:hover {
       background: #333;
@@ -111,6 +120,25 @@ function handleDeleteClick(e: any, i: number): void {
     display: none;
   }
   margin-top: 0.5rem;
+}
+
+.cancel-button {
+  border: 1px solid #333;
+  border-radius: 2px;
+  background: #fff;
+  color: #333;
+  font-size: 16px;
+  padding: 6px 12px;
+  margin-top: 8px;
+  -webkit-appearance: none;
+  cursor: pointer;
+  margin-right: 1rem;
+  transition: all 0.2s linear;
+
+  &:hover {
+    background: #333;
+    color: #fff;
+  }
 }
 
 .prev-img {
