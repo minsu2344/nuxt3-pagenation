@@ -5,7 +5,7 @@
       rel="stylesheet"
     />
     <Tiptap v-model="content" :max-limit="280" />
-    <div class="buttons">
+    <div class="add-image">
       <div>
         <label for="upload">이미지 추가</label>
         <input
@@ -17,16 +17,16 @@
           @change="handleFileChange"
         />
       </div>
-      <div class="navigation-buttons">
-        <button class="cancel-button" @click="handleCancelWrite">취소</button>
-        <button class="submit-button" @click.prevent="onSubmit">작성 완료</button>
-      </div>
     </div>
     <div v-if="prevImage.length" class="prev-imgs-container">
       <div v-for="(src, i) in prevImage" :key="i" class="prev-imgs">
         <img :src="src" alt="prev img" class="prev-img" />
         <p class="delete" @click="(e) => handleDeleteClick(e, i)">x</p>
       </div>
+    </div>
+    <div class="navigation-buttons">
+      <button class="cancel-button" @click="handleCancelWrite">취소</button>
+      <button class="submit-button" @click.prevent="onSubmit">작성 완료</button>
     </div>
   </div>
 </template>
@@ -109,17 +109,25 @@ function handleCancelWrite() {
   }
 }
 
-.buttons {
+.add-image {
   display: flex;
   justify-content: space-between;
   align-items: center;
   label {
     cursor: pointer;
+    border: solid #333 1px;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    transition: all linear 0.2s;
+    &:hover {
+      background-color: #333;
+      color: white;
+    }
   }
   input {
     display: none;
   }
-  margin-top: 0.5rem;
+  margin-top: 1rem;
 }
 
 .cancel-button {
@@ -139,6 +147,11 @@ function handleCancelWrite() {
     background: #333;
     color: #fff;
   }
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: center;
 }
 
 .prev-img {
