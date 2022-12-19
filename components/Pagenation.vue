@@ -34,8 +34,7 @@ const maxPage = ref<number>(Math.ceil(contentsData.length / limit.value)); // �
 const pageCount: number = 5; // 보여질 페이지 개수
 
 onMounted(() => {
-  console.log('onMOunted')
-  router.push({path: '/', query:{page: curPage.value, limit: limit.value}});
+  router.replace({path: '/', query:{page: curPage.value, limit: limit.value}});
 })
 
 const emit = defineEmits<{
