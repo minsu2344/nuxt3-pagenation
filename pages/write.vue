@@ -93,5 +93,6 @@ function handleUpdateFile(value: File[]) {
 .navigation-buttons {
   display: flex;
   justify-content: center;
+  margin-top: 1rem;
 }
 </style>
