@@ -126,13 +126,13 @@ const emit = defineEmits<{
   (e: "update-content", value: string): void;
 }>();
 
-watch(
-  () => content.value,
-  (value) => {
-    if (editor.value.getHTML() === value) return;
-    editor.value.commands.setContent(content.value, false);
-  }
-);
+// watch(
+//   () => content.value,
+//   (value) => {
+//     if (editor.value.getHTML() === value) return;
+//     editor.value.commands.setContent(content.value, false);
+//   }
+// );
 
 function onActionClick(slug: string, option: unknown | string = null) {
   const vm: any = editor.value.chain().focus();
