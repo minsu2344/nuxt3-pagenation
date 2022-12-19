@@ -4,7 +4,7 @@
       href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css"
       rel="stylesheet"
     />
-    <Tiptap v-model="content" :max-limit="280" />
+    <Tiptap :content="content" @update-content="handleUpdateContent" :max-limit="280" />
     <ImgUpload :file="file" @update-file="handleUpdateFile" />
     <div class="navigation-buttons">
       <button class="cancel-button" @click="handleCancelWrite">취소</button>
@@ -44,6 +44,10 @@ function handleCancelWrite() {
 
 function handleUpdateFile(value: File[]) {
   file.value = value;
+}
+
+function handleUpdateContent(value: string) {
+  content.value = value;
 }
 </script>
 
