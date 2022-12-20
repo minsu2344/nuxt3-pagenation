@@ -31,11 +31,9 @@ const autoSave = ref<boolean>(false);
 watch(
   () => content.value,
   () => {
-    console.log(1);
     clearTimeout();
     autoSave.value = false;
     if (content.value !== "<p></p>") {
-      console.log(2);
       setTimeout(() => {
         autoSave.value = true;
         if (autoSave) setTimeout(() => (autoSave.value = false), 3000);
@@ -47,20 +45,25 @@ watch(
 // 작성 완료 버튼 클릭
 async function onSubmit() {
   clearTimeout();
-  const formData = new FormData();
+  try {
+    const formData = new FormData();
 
-  for (let i = 0; i < file.value.length; i++) {
+    for (let i = 0; i < file.value.length; i++) {
+      formData.append("file", file.value[i]);
+    }
     formData.append("title", title.value);
-    formData.append("file", file.value[i]);
+    formData.append("content", content.value);
+    await axios.post("", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    alert("글 작성이 완료되었습니다.");
+    router.push({ path: "/" });
+  } catch (e) {
+    alert("오류가 발생했습니다. 토스트!!!");
+    console.log(e);
   }
-  formData.append("content", content.value);
-  await axios.post("", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-  alert("글 작성이 완료되었습니다.");
-  router.push({ path: "/" });
 }
 
 // 취소 버튼 클릭
