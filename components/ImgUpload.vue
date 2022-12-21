@@ -45,7 +45,7 @@ function handleFileChange(e: any): void {
   if (!e.target.files.length) return;
   for (let i = 0; i < e.target.files.length; i++) {
     if (!e.target.files[i].type.includes("image")) {
-      alert("이미지 파일이 아닙니다. ★토스트★");
+      alert("이미지 파일이 아닙니다.");
       return;
     }
   }

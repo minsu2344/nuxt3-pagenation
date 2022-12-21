@@ -4,7 +4,7 @@
       href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css"
       rel="stylesheet"
     />
-    <div class="save-msg" :class="{ popup: autoSave }">임시 저장(토스트!!!)</div>
+    <div class="save-msg" :class="{ popup: autoSave }">임시 저장</div>
     <div class="title-container">
       <input v-model="title" type="text" placeholder="제목을 입력하세요." />
     </div>
@@ -26,15 +26,16 @@ const title = ref<string>("");
 const content = ref<string>("");
 const file = ref<File[]>([]);
 const autoSave = ref<boolean>(false);
+let timeout: any
 
 // 임시저장 알림
 watch(
   () => content.value,
   () => {
-    clearTimeout();
+    if(timeout) clearTimeout(timeout);
     autoSave.value = false;
     if (content.value !== "<p></p>") {
-      setTimeout(() => {
+      timeout = setTimeout(() => {
         autoSave.value = true;
         if (autoSave) setTimeout(() => (autoSave.value = false), 3000);
       }, 5000);
@@ -44,7 +45,7 @@ watch(
 
 // 작성 완료 버튼 클릭
 async function onSubmit() {
-  clearTimeout();
+  if(timeout) clearTimeout(timeout);
   try {
     const formData = new FormData();
 
@@ -61,7 +62,7 @@ async function onSubmit() {
     alert("글 작성이 완료되었습니다.");
     router.push({ path: "/" });
   } catch (e) {
-    alert("오류가 발생했습니다. 토스트!!!");
+    alert("오류가 발생했습니다.");
     console.log(e);
   }
 }
